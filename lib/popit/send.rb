@@ -1,3 +1,5 @@
+require 'json'
+
 module PopIt
   class Send
 

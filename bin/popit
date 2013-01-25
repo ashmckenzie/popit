@@ -1,44 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'bundler'
-Bundler.setup
+require 'popit'
+require 'popit/cli'
 
-require 'ap'
-require 'json'
-require 'slop'
-
-require 'faye'
-require 'eventmachine'
-require 'uuid'
-require 'httparty'
-
-require_relative '../lib/popit'
-require_relative '../lib/popit/send'
-require_relative '../lib/popit/receive'
-
-Slop.parse do
-
-  command 'receive' do
-
-    run do |o, args|
-      PopIt::Receive.new.receive
-    end
-  end
-
-  command 'send' do
-
-    on :key=, 'Key to send to'
-
-    run do |o, args|
-
-      opts = o.to_hash
-
-      unless data = STDIN.read
-        puts "Enter in your content and hit CTRL-D to finish"
-      end
-
-      PopIt::Send.new(opts[:key], data).send
-    end
-  end
-end
-
+PopIt::CLI.start
