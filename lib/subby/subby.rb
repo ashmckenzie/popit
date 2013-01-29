@@ -53,9 +53,26 @@ module Subby
     end
 
     def create! input
+      parse input
+      validate_required
+      runtime_config
+    end
+
+    private
+
+    def runtime_config
+      @runtime_config ||= RuntimeConfig.new
+    end
+
+    def validate_required
+      options.merge(runtime_config.command.options).each do |name, config|
+        raise "Required option missing - #{name}" unless config.required? && config.valid?
+      end
+    end
+
+    def parse input
       i = 0
       current_command = nil
-      runtime_config = RuntimeConfig.new
 
       until i >= input.length
         arg = input[i]
@@ -87,14 +104,7 @@ module Subby
 
         i += 1
       end
-
-      runtime_config
     end
-
-    def help
-    end
-
-    private
 
     def is_valid_command? name
       commands.include? name.to_sym
@@ -141,7 +151,7 @@ module Subby
     attr_accessor
 
     def valid?
-      if options.fetch(:format, false) && value.match(options[:format])
+      if options.fetch(:format, false) && (!value.nil? && value.match(options[:format]))
         true
       else
         false

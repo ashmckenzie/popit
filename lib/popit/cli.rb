@@ -16,7 +16,7 @@ module PopIt
       subby = Subby.setup do
         # switch :verbose, 'Verbose mode'
         # switch :dry_run, 'Dry run mode'
-        # parameter :count, 'Count times', format: /\d+/
+        parameter :count, 'Count times', format: /\d+/, required: true
 
         command :receive do
           description 'Receive bumps'
@@ -32,7 +32,8 @@ module PopIt
 
       case subby.command.name
         when :receive
-          PopIt::Receive.new(subby.command.options[:server].value).receive
+          ap subby
+          # PopIt::Receive.new(subby.command.options[:server].value).receive
 
         when :send
           data = STDIN.read
