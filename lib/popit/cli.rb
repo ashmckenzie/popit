@@ -1,34 +1,48 @@
-require 'slop'
+# require 'subcommand'
+require 'ap'
+require 'pry'
 require 'popit/send'
 require 'popit/receive'
+
+require_relative '../subby/subby'
 
 module PopIt
   class CLI
 
-    def self.start
+    def start
 
-      Slop.parse do
+      # ap ARGV
 
-        command 'receive' do
-          run do |o, args|
-            PopIt::Receive.new.receive
-          end
+      subby = Subby.setup do
+        # switch :verbose, 'Verbose mode'
+        # switch :dry_run, 'Dry run mode'
+        # parameter :count, 'Count times', format: /\d+/
+
+        command :receive do
+          description 'Receive bumps'
+          parameter :server, 'Server to connect to', format: /^http/, required: true
         end
 
-        command 'send' do
-          on :key=, 'Key to send to'
-
-          run do |o, args|
-
-            opts = o.to_hash
-
-            unless data = STDIN.read
-              puts "Enter in your content and hit CTRL-D to finish"
-            end
-
-            PopIt::Send.new(opts[:key], data).send
-          end
+        command :send do
+          description 'Send bumps'
+          parameter :server, 'Server to connect to', format: /^http/, required: true
+          parameter :key, 'Key to use', format: /^\w+-\w+-\w+-\w+-\w+$/, required: true
         end
+      end
+
+      case subby.command.name
+        when :receive
+          PopIt::Receive.new(subby.command.options[:server].value).receive
+
+        when :send
+          data = STDIN.read
+
+          PopIt::Send.new(
+            subby.command.options[:server].value,
+            subby.command.options[:key].value,
+            data
+          ).send
+
       end
     end
   end

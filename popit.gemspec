@@ -23,5 +23,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency('thin')
   gem.add_dependency('uuid')
   gem.add_dependency('httparty')
-  gem.add_dependency('slop')
+  # gem.add_dependency('trollop')
+  # gem.add_dependency('subcommand')
+
+  gem.add_development_dependency('awesome_print')
+  gem.add_development_dependency('pry')
 end

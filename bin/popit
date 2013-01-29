@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 
+$:.unshift File.dirname(__FILE__) + File::SEPARATOR + File.join('..', 'lib')
+
 require 'popit'
 require 'popit/cli'
 
-PopIt::CLI.start
+PopIt::CLI.new.start

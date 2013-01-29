@@ -3,7 +3,8 @@ require 'json'
 module PopIt
   class Send
 
-    def initialize key, data
+    def initialize server, key, data
+      @server = server
       @key = key
       @data = data
     end
@@ -16,7 +17,7 @@ module PopIt
     private
 
     def url
-      "#{PopIt::BASE_URL}/messages"
+      "#{@server}/messages"
     end
 
     def channel

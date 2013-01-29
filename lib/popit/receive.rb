@@ -1,7 +1,8 @@
 module PopIt
   class Receive
 
-    def initialize
+    def initialize server
+      @server = server
       @key = get_new_key
       puts "Your key is #{@key}"
     end
@@ -25,11 +26,11 @@ module PopIt
     end
 
     def new_key_url
-      "#{PopIt::BASE_URL}/key/new"
+      "#{@server}/key/new"
     end
 
     def url
-      "#{PopIt::BASE_URL}/messages"
+      "#{@server}/messages"
     end
 
     def channel
